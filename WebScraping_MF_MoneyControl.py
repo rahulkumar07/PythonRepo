@@ -13,4 +13,7 @@ rank_in_categ= str(rank_lst[0].contents[0]).replace('<b>','').replace('</b>','')
 mf_category=str(rank_lst[1].contents[0]).replace('<b>','').replace('</b>','')
 rank_str=rank_in_categ+' in '+mf_category
 print (rank_str)
-portFolio_lst=soup.find_all(class_='tblporhd')
+portFolio_lst=soup.find_all(class_='tblporhd')[2].find_all(class_='bl_13')
+for portFolio_lst_itms in portFolio_lst:
+    print (portFolio_lst_itms.contents[0])
+
