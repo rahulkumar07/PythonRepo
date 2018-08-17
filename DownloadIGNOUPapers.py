@@ -3,24 +3,38 @@ import pandas as pd
 from bs4 import BeautifulSoup
 import requests as req
 import re
+
+def yearWisePapers(yearLink):
+    print ("Inside yearWisePapers for "+yearLink)
+    yearpage=req.get(yearLink)
+    soup = BeautifulSoup(yearpage.text,'html.parser')
+    yeartable=soup.findAll('table')
+    course_rows = yeartable[0].findAll('tr')
+    for course_row in course_rows:
+        #print (course_row)
+        s=str(course_row)
+        if 'Economics' in s:
+            print(s.split('href')[1].split('"')[1])
+            #print (course_row)
+
+    return 'ss'
+
+
+
 yearUrl="https://webservices.ignou.ac.in/Pre-Question/"    #Actual URL for all year papers
 allyearpage=req.get(yearUrl)
 soup = BeautifulSoup(allyearpage.text,'html.parser')
-yeartable=soup.find('table')                               #As there is a single table in the page we used find, otherwise we could have used findAll
-yearlinks = yeartable.findAll('a')                         #Now finding the anchor tag
+allyearstable=soup.find('table')                               #As there is a single table in the page we used find, otherwise we could have used findAll
+allyearlinks = allyearstable.findAll('a')                         #Now finding the anchor tag
 #'a', attrs={'href': re.compile("^http://")}):
-for yearlink in yearlinks:
-    print(str(yearlink))
+for yearlink in allyearlinks:
+    #print(str(yearlink))
     s=str(yearlink)
     l = s.split('"')[1::2];                               #this prints 2,4,6th elements[index wise odd]... ie. even elements
     yearExtractedLink=l[0]
     if 'http' not in yearExtractedLink:
         yearExtractedLink=yearUrl+yearExtractedLink
-
+        yearWisePapers(yearLink=yearExtractedLink)
 
     print (yearExtractedLink)
 
-
-def yearWisePapers(yearLink):
-
-    return 'ss'
