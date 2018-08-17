@@ -13,10 +13,12 @@ def yearWisePapers(yearLink):
     for course_row in course_rows:
         #print (course_row)
         s=str(course_row)
-        if 'Economics' in s:
-            print(s.split('href')[1].split('"')[1])
+        if 'Master of Arts in Economics' in s:
+            econrawURL=s.split('href')[1].split('"')[1]
+            if 'http' not in econrawURL:
+                econrawURL=yearLink.rsplit('/',1)[0]+"/"+econrawURL
+            print(econrawURL)
             #print (course_row)
-
     return 'ss'
 
 
