@@ -6,22 +6,56 @@ import re
 
 def yearWisePapers(yearLink):
     print ("Inside yearWisePapers for "+yearLink)
-    yearpage=req.get(yearLink)
-    soup = BeautifulSoup(yearpage.text,'html.parser')
-    yeartable=soup.findAll('table')
-    course_rows = yeartable[0].findAll('tr')
-    for course_row in course_rows:
-        #print (course_row)
-        s=str(course_row)
-        if 'Master of Arts in Economics' in s:
-            econrawURL=s.split('href')[1].split('"')[1]
-            if 'http' not in econrawURL:
-                econrawURL=yearLink.rsplit('/',1)[0]+"/"+econrawURL
-            print(econrawURL)
+    try:
+        yearpage=req.get(yearLink)
+        soup = BeautifulSoup(yearpage.text,'html.parser')
+        yeartable=soup.findAll('table')
+        course_rows = yeartable[0].findAll('tr')
+        for course_row in course_rows:
             #print (course_row)
-    return 'ss'
+            s=str(course_row)
+            if 'Master of Arts in Economics' in s:
+                econrawURL=s.split('href')[1].split('"')[1]
+                if 'http' not in econrawURL:
+                    econrawURL=yearLink.rsplit('/',1)[0]+"/"+econrawURL
+
+                getPDFURLfromURL(econrawURL,"MEC")
+                #print(econrawURL)
+
+        return 'ss'
+    except Exception as e:
+        return str(e)
+def downloadFiles(url):
+    print("URL from download:"+url)
+    r = req.get(url)
+    print("ss::"+url.rsplit('/',1)[1])
+    file= open(url.rsplit('/',1)[1], 'wb')
+    file.write(r.content)
+    file.close()
 
 
+def getPDFURLfromURL(url,searchString):
+    print ("Inside getPDFfromURL for "+url)
+    try:
+        pdfPage=req.get(url)
+        soup = BeautifulSoup(pdfPage.text,'html.parser')
+        yeartable=soup.findAll('table')
+        course_rows = yeartable[0].findAll('tr')
+        for course_row in course_rows:
+            #print (course_row)
+            s=str(course_row)
+            if 'MEC' in s:
+                econrawURL=s.split('href')[1].split('"')[1]
+                if 'http' not in econrawURL:
+                    econrawURL=url.rsplit('/',1)[0]+"/"+econrawURL
+
+                downloadFiles(econrawURL)
+                print("ddd:"+econrawURL)
+
+                #print (course_row)
+        return 'ss'
+    except Exception as e:
+        return str(e)
 
 yearUrl="https://webservices.ignou.ac.in/Pre-Question/"    #Actual URL for all year papers
 allyearpage=req.get(yearUrl)
@@ -36,7 +70,10 @@ for yearlink in allyearlinks:
     yearExtractedLink=l[0]
     if 'http' not in yearExtractedLink:
         yearExtractedLink=yearUrl+yearExtractedLink
-        yearWisePapers(yearLink=yearExtractedLink)
+
+    yearWisePapers(yearLink=yearExtractedLink)
 
     print (yearExtractedLink)
+
+
 
