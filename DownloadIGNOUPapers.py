@@ -20,11 +20,13 @@ def yearWisePapers(yearLink):
                     econrawURL=yearLink.rsplit('/',1)[0]+"/"+econrawURL
 
                 getPDFURLfromURL(econrawURL,"MEC")
-                #print(econrawURL)
+
 
         return 'ss'
     except Exception as e:
+        print ("Exception occured while opening the connection, now moving to next")
         return str(e)
+
 def downloadFiles(url):
     print("URL from download:"+url)
     r = req.get(url)
@@ -59,7 +61,7 @@ def getPDFURLfromURL(url,searchString):
 
 yearUrl="https://webservices.ignou.ac.in/Pre-Question/"    #Actual URL for all year papers
 allyearpage=req.get(yearUrl)
-soup = BeautifulSoup(allyearpage.text,'html.parser')
+soup = BeautifulSoup(allyearpage.text,'lxml')                   # earlier it was html.parser which didn't parse all.
 allyearstable=soup.find('table')                               #As there is a single table in the page we used find, otherwise we could have used findAll
 allyearlinks = allyearstable.findAll('a')                         #Now finding the anchor tag
 #'a', attrs={'href': re.compile("^http://")}):
@@ -72,8 +74,4 @@ for yearlink in allyearlinks:
         yearExtractedLink=yearUrl+yearExtractedLink
 
     yearWisePapers(yearLink=yearExtractedLink)
-
-    print (yearExtractedLink)
-
-
 
