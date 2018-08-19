@@ -3,6 +3,7 @@ import pandas as pd
 from bs4 import BeautifulSoup
 import requests as req
 import re
+import os
 
 def yearWisePapers(yearLink):
     print ("Inside yearWisePapers for "+yearLink)
@@ -24,14 +25,14 @@ def yearWisePapers(yearLink):
 
         return 'ss'
     except Exception as e:
-        print ("Exception occured while opening the connection, now moving to next")
+        print ("Exception occured while opening the connection, now moving to next"+str(e))
         return str(e)
 
 def downloadFiles(url):
     print("URL from download:"+url)
     r = req.get(url)
     print("ss::"+url.rsplit('/',1)[1])
-    file= open(url.rsplit('/',1)[1], 'wb')
+    file= open(dirname+"/"+url.rsplit('/',1)[1], 'wb')
     file.write(r.content)
     file.close()
 
@@ -61,9 +62,10 @@ def getPDFURLfromURL(url,searchString):
 
 yearUrl="https://webservices.ignou.ac.in/Pre-Question/"    #Actual URL for all year papers
 allyearpage=req.get(yearUrl)
-soup = BeautifulSoup(allyearpage.text,'lxml')                   # earlier it was html.parser which didn't parse all.
+soup = BeautifulSoup(allyearpage.text,'lxml')
 allyearstable=soup.find('table')                               #As there is a single table in the page we used find, otherwise we could have used findAll
 allyearlinks = allyearstable.findAll('a')                         #Now finding the anchor tag
+dirname=""
 #'a', attrs={'href': re.compile("^http://")}):
 for yearlink in allyearlinks:
     #print(str(yearlink))
@@ -72,6 +74,11 @@ for yearlink in allyearlinks:
     yearExtractedLink=l[0]
     if 'http' not in yearExtractedLink:
         yearExtractedLink=yearUrl+yearExtractedLink
-
+    dirname=yearExtractedLink.rsplit("/",1)[1].split(".")[0] #now directory to save
+    if(not os.path.isdir(dirname)):
+        os.mkdir(dirname)
+    else:
+        print("already exists:"+dirname)
     yearWisePapers(yearLink=yearExtractedLink)
+
 
