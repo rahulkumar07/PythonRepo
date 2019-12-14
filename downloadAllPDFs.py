@@ -2,7 +2,7 @@
 # coding: utf-8
 
 # In[9]:
-
+#Download all pds from a URL
 
 import pandas as pd
 from bs4 import BeautifulSoup
@@ -13,7 +13,7 @@ import os
 dirname=['C:\\Users\\NRkPC\\Desktop\\ChatBot']
 
 def main():
-    yearUrl="https://fnimphiu.github.io/OracleTechExchange/"    #Actual URL for all year papers
+    yearUrl="customURL/"    #Actual URL for all year papers
     allyearpage=req.get(yearUrl)
     soup = BeautifulSoup(allyearpage.text,'lxml')
     allyearstable=soup.findAll('a')                               #As there is a single table in the page we used find, otherwise we could have used findAll
