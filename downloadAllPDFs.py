@@ -10,7 +10,7 @@ import requests as req
 import re
 import os
 
-dirname=['C:\\Users\\NRkPC\\Desktop\\ChatBot']
+dirname=['C:\\Users\\NRkPC\\Desktop\\ChatBot']    #name of the directory where you want to save the fies
 
 def main():
     yearUrl="customURL/"    #Actual URL for all year papers
